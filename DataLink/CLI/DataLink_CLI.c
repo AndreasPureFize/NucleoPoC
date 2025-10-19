@@ -683,6 +683,8 @@ void CLI_Execute(const cli_command_t *cmd, cli_result_t *res)
                 {
                     res->u8   = u8_val;
                     res->code = CLI_RES_OK;
+                    static const char ok[] = "OK\r\n";
+                    (void)HAL_UART_Transmit(&huart2, (uint8_t*)ok, (uint16_t)(sizeof(ok) - 1U), CLI_UART_TX_TIMEOUT_MS);
                 }
                 else
                 {
@@ -706,6 +708,8 @@ void CLI_Execute(const cli_command_t *cmd, cli_result_t *res)
                 {
                     res->u8   = u8_val;
                     res->code = CLI_RES_OK;
+                    static const char ok[] = "OK\r\n";
+                    (void)HAL_UART_Transmit(&huart2, (uint8_t*)ok, (uint16_t)(sizeof(ok) - 1U), CLI_UART_TX_TIMEOUT_MS);
                 }
                 else
                 {

@@ -363,21 +363,36 @@ bool ReadPower(float *watts)
 /* Writes OUTPUT_STATE @0x800C (exactly 1 byte, 0 or 1). Verifies read-back. */
 bool WriteOutputState(uint8_t state)
 {
-  state = (state != 0) ? 1u : 0u;
-  dl_status_t st = dl_write_retry(0x800Cu, 1, &state);
-  if (st != DL_OK) {
-    /* unlock once, then retry */
-    uint8_t keys[8];
-    le32_to_buf(&keys[0], OCEAN_UNLOCK_KEY0);
-    le32_to_buf(&keys[4], OCEAN_UNLOCK_KEY1);
-    (void)dl_write_retry(0x8100u, 8, keys);
-    st = dl_write_retry(0x800Cu, 1, &state);
-    if (st != DL_OK) return false;
-  }
-  /* read-back verify */
-  uint8_t rb = 0xFF;
-  if (dl_read_retry(0x800Cu, 1, &rb) != DL_OK) return false;
-  return (rb == state);
+	if (state != 0)
+	{
+	    state = 1u;
+	}
+	else
+	{
+	    state = 0u;
+	}
+
+	dl_status_t st = dl_write_retry(0x800Cu, 1, &state);
+
+	if (st != DL_OK)
+	{
+		/* unlock once, then retry */
+		uint8_t keys[8];
+		le32_to_buf(&keys[0], OCEAN_UNLOCK_KEY0);
+		le32_to_buf(&keys[4], OCEAN_UNLOCK_KEY1);
+		(void)dl_write_retry(0x8100u, 8, keys);
+		st = dl_write_retry(0x800Cu, 1, &state);
+
+		if (st != DL_OK)
+			return false;
+	}
+
+	/* read-back verify */
+	uint8_t rb = 0xFF;
+	if (dl_read_retry(0x800Cu, 1, &rb) != DL_OK)
+		return false;
+
+	return (rb == state);
 }
 
 /* Reads OUTPUT_STATE @ 0x800C (U8). Returns true on success and sets *state. */

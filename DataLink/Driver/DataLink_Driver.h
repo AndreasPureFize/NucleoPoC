@@ -62,6 +62,7 @@ dl_status_t dl_write(
 dl_status_t dl_read_retry (uint16_t addr, uint8_t len, uint8_t* outBuf);
 dl_status_t dl_write_retry(uint16_t addr, uint8_t len, const uint8_t* inBuf);
 
+
 #ifdef __cplusplus
 }
 #endif

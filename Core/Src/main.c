@@ -46,7 +46,7 @@
 /* USER CODE BEGIN PD */
 /*** Link types, framing and constants ***/
 
-#define APP_VERSION_STR           "0.1.0"						/* Application version string printed on console at startup. */
+#define APP_VERSION_STR           "0.1.1"						/* Application version string printed on console at startup. */
 
 /* USER CODE END PD */
 
@@ -118,17 +118,21 @@ int main(void)
   // Start timer interrupt for LED heartbeat
   HAL_TIM_Base_Start_IT(&htim2);
 
-  HAL_Delay(2000);
+  HAL_Delay(1000);
 
   // Build CRC16 LUT once (Ocean UI polynomial)
   crc16_init();  /* LUT based on poly 0xA2EB, init value 0xFFFF */ /*cite*/
 
-  /* Handshake (quiet if it fails) */
-//  if (dl_handshake())
-//  {
-//	  print_line("Handshake OK\r\n");
-//  }
-//
+  // Wait until contact i.e loop here until contact with Ocean Driver
+  while(!dl_handshake())
+  {
+	  print_line("Waiting for connection\r\n");
+	  HAL_Delay(500);
+  }
+
+  print_line("Handshake OK\r\n");
+
+
 //  /* One-time info + initial Error line */
 //  read_one_time_blocks();
 
